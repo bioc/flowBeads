@@ -44,8 +44,11 @@ setClass(
 #' @export
 #' @rdname BeadFlowFrame-class
 BeadFlowFrame <- function(fcs.filename, bead.filename) {
-  #if no name is given will try to guess the number of bead populations
+    #check if filename is valid file
+    if (!file.exists(fcs.filename))
+        stop(paste("'", filename, "' is not a valid file", sep = ""))
   
+    #if no name is given will try to guess the number of bead populations
     if (missing(bead.filename)) {
         #data(package='flowBeads', dakomef)
         #beads.mef <- dakomef
@@ -55,6 +58,7 @@ BeadFlowFrame <- function(fcs.filename, bead.filename) {
         beads.mef <- read.csv2(bead.filename)
         colnames(beads.mef) <- toupper(colnames(beads.mef))
     }
+
     #only keep columns which finish with .A (ignore .W and .H)
     flow.frame <- read.FCS(fcs.filename, alter.names=TRUE, column.pattern=".A")
     #rename the parameters
